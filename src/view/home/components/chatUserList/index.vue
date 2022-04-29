@@ -3,29 +3,26 @@
     <div class="search-box">
       <a-input v-model:value="state.searchValue" placeholder="搜索" @input="InputChangeFuc"/>
     </div>
-    <div class="side-left-item" :class="state.currentIndex == index ? 'side-left-item-cur' : '' " v-for="(item,index) in prop.chatUserList" :key="item.id" @click="selectChatObj(item,index)">
-    <a-badge :count="item.readCunt ? item.readCunt : ''" size="12">
-      <a-image
-      v-if="item.avatar"
-        :preview="false"
-        :width="36"
-        :src="item.avatar"
-      />
-      <div v-else class="not-avatar">
-        {{item.uname.slice(0,2)}}
-      </div>
+    <div class="user-list">
+      <div class="side-left-item" :class="state.currentIndex == index ? 'side-left-item-cur' : '' " v-for="(item,index) in prop.chatUserList" :key="item.id" @click="selectChatObj(item,index)">
+      <a-badge :count="item.readCunt ? item.readCunt : ''" size="12">
+        <AvatarImage :avatar="item.avatar" :name="item.uname"/>
       </a-badge>
       <div class="side-left-item-content">
         <h6><span>{{item.uname}}</span><em>{{ getTimerFuc(item)}}</em></h6>
         <p v-html="item.contantFirst ? item.contantFirst.content : ''"></p>
       </div>
-    </div>  
+    </div> 
+    </div>
+     
   </div>
 </template>
 
 <script setup lang="ts">
 import { reactive,ref } from 'vue'; 
 import avatar from '@/assets/avatar.png'
+
+import AvatarImage from '@/view/home/components/avatarImg/index.vue'
 
 import {
   timerFormat
@@ -79,7 +76,7 @@ const selectChatObj = (item:any,index:any) => {
     }
     .side-left-item{
       display:flex;
-      width:259px;
+      width:100%;
       padding:10px;
       border-bottom:1px solid #efefef;
       cursor: pointer;
@@ -118,20 +115,32 @@ const selectChatObj = (item:any,index:any) => {
           font-size:12px;
         }
       }
-      .not-avatar{
-        width: 36px;
-        height: 36px;
-        overflow: hidden;
-        line-height: 36px;
-        text-align: center;
-        background:#1890ff;
-        border-radius: 6px;
-        color:#fff;
-      }
     }
     .side-left-item-cur{
       background: #fafafa;
     }
   }
+  .user-list{
+    height: calc(100% - 63px);
+    overflow: auto;
+  }
+.user-list::-webkit-scrollbar{
+  width: 6px;
+  background: #c4c4c4;
+}
+.user-list::-webkit-scrollbar{
+width:6px;
+}
+.user-list::-webkit-scrollbar{
+width: 6px;
+}
+.user-list::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #ddd;
+}
+.user-list::-webkit-scrollbar-track {
+  border-radius: 0;
+  background: #fafafa;
+}
 
 </style>

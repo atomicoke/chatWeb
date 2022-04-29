@@ -43,11 +43,11 @@ import VuePictureCropper, { cropper } from 'vue-picture-cropper'
 
 import {
   uploadImagePuc
-} from '@/api/public/index.ts'
+} from '@/api/public/index'
 
 import {
   editSelfInfo, // 修改用户信息
-} from '@/api/login/index.ts'
+} from '@/api/login/index'
 
 const store = useStore()
 const storeState = store.$state

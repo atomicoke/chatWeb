@@ -11,8 +11,10 @@
     </div>
       <div class="item-content-box">
         <h6>{{item.fromUname}}</h6>
-        <div class="item-content"  v-html="item.content">
-        </div> 
+        <div class="chat-content-main">
+          <div class="item-content"  v-html="item.content"></div> 
+          <i class="loading-box" v-if="item.sendStarts"><loading-outlined /></i>
+        </div>
         <!-- <div class="item-image">
         </div> -->
       </div>
@@ -27,7 +29,10 @@
     </div>
     <div class="item-content-box">
       <h6>{{item.fromUname}}</h6>
-      <div class="item-content" v-html="item.content"></div>
+      <div class="chat-content-main">
+        <div class="item-content" v-html="item.content"></div>
+        <i class="loading-box" v-if="item.sendStarts"><loading-outlined /></i>
+      </div>
     </div>
   </div> 
 </div>
@@ -35,6 +40,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive,ref } from 'vue'; 
+import { LoadingOutlined  } from '@ant-design/icons-vue';
 import {useStore} from '@/store/index'
 
 import avatar from '@/assets/avatar.png'
@@ -153,6 +159,29 @@ const senTimerFuc = (item:any) => {
   }
   .item-content-box{
     max-width: 50%;
+  }
+  .chat-content-main{
+    position:relative;
+  }
+  .chat-content-item-right{
+    .chat-content-main{
+     .loading-box{
+       position: absolute;
+       left: -10px;
+    top: 50%;
+    transform: translate(-100%, -50%);
+     } 
+    }
+  }
+  .chat-content-item-left{
+    .chat-content-main{
+     .loading-box{
+       position: absolute;
+       right: -10px;
+      top: 50%;
+      transform: translate(100%, -50%);
+     } 
+    }
   }
   
 </style>

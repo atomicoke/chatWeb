@@ -13,7 +13,7 @@
         </div>
         <div class="chat-main-right" v-if="state.chatTitle != '' ">
           <div class="chat-main-header">
-            {{state.chatTitle}}
+            <AvatarImage :avatarWh="36" :avatar="state.chatAvatar" :name="state.chatTitle"/><span class="chat-title">{{state.chatTitle}}</span>
           </div>
           <div class="chat-main-content" ref="chatMainContent">
             <div ref="chatRecordList">
@@ -41,6 +41,7 @@ import ChatUserList from '@/view/home/components/chatUserList/index.vue'
 import ChatRecordList from '@/view/home/components/chatRecord/index.vue'
 import Setting from '@/view/home/components/setting/index.vue'
 import SendChatMsg from '@/view/home/components/sendMsg/index.vue'
+import AvatarImage from '@/view/home/components/avatarImg/index.vue'
 
 import {
   getUserAll, // 获取所有用户
@@ -52,7 +53,8 @@ import {
 const ws = new WebSocket('ws://114.132.249.192:8081/echo?token=' + localStorage.getItem('token'))
 const store = computed(() => useStore().userInfo)
 const state= reactive({
-  chatTitle:'',
+  chatTitle:'', // 当前用户姓名
+  chatAvatar:'', // 当前用户头像
   chatUserListRes:<any>[],
   chatUserList:<any>[],
   chatListAll:<any>[
@@ -225,7 +227,9 @@ const selectChatFuc = (item:any) => {
     return
   }
   state.toId = item.id
+  console.log(item.avatar)
   state.chatTitle = item.uname
+  state.chatAvatar = item.avatar
   state.avatarObj.formAvatar = item.avatar
   state.avatarObj.myAvatar = store.value.avatar
   if(item.level){
@@ -305,7 +309,6 @@ onMounted(()=>{
   .chat-main-left{
     display:flex;
     flex:none;
-    width:320px;
     border-right:1px solid #e2e2e2;
     .side-left-setting{
       position: relative;
@@ -324,12 +327,16 @@ onMounted(()=>{
     }
   }
 .chat-main-right{
-  width:760px;
+  width:745px;
   .chat-main-header{
-      height:48px;
-      line-height:28px;
+      height:62px;
       padding:10px;
       background:#fff;
+      display: flex;
+      align-items: center;
+      .chat-title{
+        margin-left: 10px;
+      }
     }
   }
   .chat-main-content{
