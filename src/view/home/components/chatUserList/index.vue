@@ -5,23 +5,20 @@
     </div>
     <div class="user-list">
       <div class="side-left-item" :class="state.currentIndex == index ? 'side-left-item-cur' : '' " v-for="(item,index) in prop.chatUserList" :key="item.id" @click="selectChatObj(item,index)">
-      <a-badge :count="item.readCunt ? item.readCunt : ''" size="12">
-        <AvatarImage :avatar="item.avatar" :name="item.uname"/>
-      </a-badge>
-      <div class="side-left-item-content">
-        <h6><span>{{item.uname}}</span><em>{{ getTimerFuc(item)}}</em></h6>
-        <p v-html="item.contantFirst ? item.contantFirst.content : ''"></p>
-      </div>
-    </div> 
+        <a-badge :count="item.readCunt ? item.readCunt : ''" size="12">
+          <AvatarImage :avatar="item.avatar" :name="item.uname"/>
+        </a-badge>
+        <div class="side-left-item-content">
+          <h6><span>{{item.uname}}</span><em>{{ getTimerFuc(item)}}</em></h6>
+          <p v-html="item.contantFirst ? item.contantFirst.content : ''"></p>
+        </div>
+      </div> 
     </div>
-     
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive,ref } from 'vue'; 
-import avatar from '@/assets/avatar.png'
-
+import { reactive } from 'vue'; 
 import AvatarImage from '@/view/home/components/avatarImg/index.vue'
 
 import {
@@ -68,7 +65,7 @@ const selectChatObj = (item:any,index:any) => {
 
 <style lang="scss" scoped> 
  .side-left-list{
-    width:100%;
+    width:275px;
     .search-box{
       // height:48px;
       background:#fff;
@@ -110,7 +107,9 @@ const selectChatObj = (item:any,index:any) => {
           }
         }
         p{
-        line-height:18px;
+          height:18px;
+          line-height:18px;
+          overflow: hidden;
           color:#aaa;
           font-size:12px;
         }

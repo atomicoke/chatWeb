@@ -13,7 +13,12 @@
         </div>
         <div class="chat-main-right" v-if="state.chatTitle != '' ">
           <div class="chat-main-header">
-            <AvatarImage :avatarWh="36" :avatar="state.chatAvatar" :name="state.chatTitle"/><span class="chat-title">{{state.chatTitle}}</span>
+            <div class="chat-header-left">
+              <AvatarImage :avatarWh="36" :avatar="state.chatAvatar" :name="state.chatTitle"/><span class="chat-title">{{state.chatTitle}}</span>
+            </div>
+            <div class="chat-header-right">
+              <SettingUpdateFriendInfo />
+            </div>
           </div>
           <div class="chat-main-content" ref="chatMainContent">
             <div ref="chatRecordList">
@@ -42,6 +47,7 @@ import ChatRecordList from '@/view/home/components/chatRecord/index.vue'
 import Setting from '@/view/home/components/setting/index.vue'
 import SendChatMsg from '@/view/home/components/sendMsg/index.vue'
 import AvatarImage from '@/view/home/components/avatarImg/index.vue'
+import SettingUpdateFriendInfo from '@/view/home/components/updateFriendInfo/index.vue'
 
 import {
   getUserAll, // 获取所有用户
@@ -334,13 +340,18 @@ onMounted(()=>{
       background:#fff;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      .chat-header-left{
+        display: flex;
+        align-items: center;
+      }
       .chat-title{
         margin-left: 10px;
       }
     }
   }
   .chat-main-content{
-    height: 533px;
+    height: 520px;
     padding:20px;
     overflow: auto;
   }
