@@ -109,9 +109,11 @@ const selectChatObj = (item:any,index:any) => {
         p{
           height:18px;
           line-height:18px;
-          overflow: hidden;
           color:#aaa;
           font-size:12px;
+          overflow:hidden;
+          text-overflow:ellipsis;
+          white-space:nowrap;
         }
       }
     }

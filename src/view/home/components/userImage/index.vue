@@ -29,7 +29,7 @@
       </div>  
     </template>
   </a-dropdown>
-  <UpdateAvatar :imgUrl="state.imgUrl" v-if="state.visibleUpdate" :visibleUpdate="state.visibleUpdate" @handleOkFuc="handleOk"/>
+  <UpdateAvatar :imgUrl="store.avatar" v-if="state.visibleUpdate" :visibleUpdate="state.visibleUpdate" @handleOkFuc="handleOk"/>
   </div>
 </template>
 
@@ -53,7 +53,6 @@ const state = reactive({
     avatar:store.avatar ? store.avatar : avatar
   },
   visibleUpdate:false,
-  imgUrl:store.avatar ? store.avatar : avatar,
   editFalse:false,
   paramsData:{
     id:store.id,
@@ -67,10 +66,11 @@ const updateAvatarFuc = () => {
   state.visibleFalse = false
 }
 
-const handleOk =async (val:any) => {
+const handleOk = (val:any) => {
   if(val){
     state.userInfo.avatar = store.avatar ? store.avatar : avatar
-    console.log(state.userInfo.avatar,val,'state.userInfo.avatar')
+    useStore().updateUserAvata(val)
+    console.log(state.userInfo.avatar,val,'state.userInfo.avatar', useStore())
   }
   state.visibleUpdate = false
 };

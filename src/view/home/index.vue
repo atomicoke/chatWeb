@@ -4,7 +4,10 @@
       <div class="chat-main-box">
         <div class="chat-main-left">
           <div class="side-left-setting">
-            <ImageAvatar />
+            <div class="avatar-top">
+              <ImageAvatar />
+              <SideBarList/>
+            </div> 
             <div class="setting-box">
               <Setting />
             </div>
@@ -48,6 +51,8 @@ import Setting from '@/view/home/components/setting/index.vue'
 import SendChatMsg from '@/view/home/components/sendMsg/index.vue'
 import AvatarImage from '@/view/home/components/avatarImg/index.vue'
 import SettingUpdateFriendInfo from '@/view/home/components/updateFriendInfo/index.vue'
+
+import SideBarList from '@/view/home/components/sideTabList/index.vue'
 
 import {
   getUserAll, // 获取所有用户

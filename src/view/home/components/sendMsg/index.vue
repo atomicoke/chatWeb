@@ -5,7 +5,6 @@
       <div class="chat-main-text-content" contenteditable="true" ref="chatContentDom" v-html="state.chatContent" >
       </div>
     </div>
-
   </div>
   <div class="chat-main-text-btn">
     <a-button  type="primary" size="mini" @click="sendFuc($event)">发送</a-button>

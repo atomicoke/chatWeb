@@ -86,13 +86,13 @@ const handleOk =async (e: MouseEvent) => {
   console.log(url,data)
   const fd = new FormData()
   fd.append('file', data)
+  state.loading = true
   let resData  = await uploadImagePuc(fd)
   if(resData.code == 0){
-    state.loading = true
     state.paramsData.avatar = resData.data.objectName
     state.paramsData.uname = storeState.userInfo.uname
     store.updateUserAvata(resData.data.accessUrl)
-    let data = await editSelfInfo(state.paramsData)
+    await editSelfInfo(state.paramsData)
     state.visible = false;
     state.loading = false
     emit('handleOkFuc',resData.data.accessUrl)
