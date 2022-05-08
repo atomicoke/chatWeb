@@ -11,8 +11,6 @@
         <div class="user-info-item">
           <div class="user-info-item-left">
             <h3>
-              <!-- <a-input v-model:value="state.paramsData.uname" :bordered="false" @blur="infoFuc" ref="unameRef" v-if="state.editFalse" :maxlength="15"/> -->
-              <!-- <span v-else @click="updateUnameFuc">{{state.userInfo.uname}}</span> -->
               <span>{{state.userInfo.uname}}</span>
               </h3>
             <h3><span>ID:</span><em>{{state.userInfo.idLong}}</em></h3>

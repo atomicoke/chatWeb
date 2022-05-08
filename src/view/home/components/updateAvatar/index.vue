@@ -82,8 +82,9 @@ const handleCancel = () => {
 
 const handleOk =async (e: MouseEvent) => {
   let data = await cropper.getBlob()
+  console.log(data)
+  return
   let url = window.URL.createObjectURL(data)
-  console.log(url,data)
   const fd = new FormData()
   fd.append('file', data)
   state.loading = true

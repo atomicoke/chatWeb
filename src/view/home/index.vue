@@ -6,13 +6,13 @@
           <div class="side-left-setting">
             <div class="avatar-top">
               <ImageAvatar />
-              <SideBarList/>
+              <SideBarList @selectSideTabFuc="selectSideTabFuc"/>
             </div> 
             <div class="setting-box">
               <Setting />
             </div>
           </div>
-          <ChatUserList :chatUserList="state.chatUserList" @selectChatFuc="selectChatFuc" @inputChangeFuc="inputChangeFuc"/>
+          <ChatUserList :chatUserList="state.chatUserList" @selectChatFuc="selectChatFuc" @inputChangeFuc="inputChangeFuc" :addFriendIcon="state.addFriendIcon"/>
         </div>
         <div class="chat-main-right" v-if="state.chatTitle != '' ">
           <div class="chat-main-header">
@@ -78,7 +78,8 @@ const state= reactive({
   avatarObj:{
     formAvatar:'',
     myAvatar:store.value.avatar
-  }
+  },
+  addFriendIcon:false,
 })
 let chatMainContent = ref()
 let chatRecordList = ref()
@@ -279,6 +280,15 @@ const inputChangeFuc = (val:string) => {
   // console.log(resChatList)
 }
 
+// 左侧标签栏选择
+const selectSideTabFuc =(item:any) => {
+  if(item.id == 2){
+    state.addFriendIcon = true
+    return
+  }
+   state.addFriendIcon = false
+}
+ 
 onMounted(()=>{
   getUserAllFuc()
   if(ws){
@@ -310,7 +320,7 @@ onMounted(()=>{
     border-radius: 8px;
     background: #f2f2f2;
     overflow:hidden;
-    box-shadow:0 0 15px rgba(0,0,0,.2);
+    box-shadow:0 0 15px rgba(200,200,200,.2);
   }
 }
 .chat-main-box{

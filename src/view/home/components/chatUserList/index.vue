@@ -1,7 +1,11 @@
 <template>
   <div class="side-left-list">
     <div class="search-box">
-      <a-input v-model:value="state.searchValue" placeholder="搜索" @input="InputChangeFuc"/>
+      <a-input v-model:value="state.searchValue" placeholder="搜索" @input="InputChangeFuc"/><a-button v-if="prop.addFriendIcon" @click="friendRequestsFuc">
+        <template #icon>
+          <usergroup-add-outlined />
+        </template>
+      </a-button>
     </div>
     <div class="user-list">
       <div class="side-left-item" :class="state.currentIndex == index ? 'side-left-item-cur' : '' " v-for="(item,index) in prop.chatUserList" :key="item.id" @click="selectChatObj(item,index)">
@@ -14,12 +18,16 @@
         </div>
       </div> 
     </div>
+    <Friends v-if="state.friendsVisible" :friendsVisible="state.friendsVisible" @closeModal="closeModal"/> 
   </div>
 </template>
 
 <script setup lang="ts">
 import { reactive } from 'vue'; 
 import AvatarImage from '@/view/home/components/avatarImg/index.vue'
+import Friends from '@/components/friends/index.vue'
+
+import { UsergroupAddOutlined } from '@ant-design/icons-vue';
 
 import {
   timerFormat
@@ -30,12 +38,18 @@ const prop = defineProps({
   chatUserList:{
     type:Object,
     default:[]
+  },
+  // 显示添加好友图标
+  addFriendIcon:{
+    type:Boolean,
+    default:false,
   }
 })
 const state= reactive({
   chatUserList:<any>[],
   currentIndex:<any>null,
   searchValue:'', // 搜索成员/群
+  friendsVisible:false,
 })
 
 // 搜索输入框发生变化
@@ -55,9 +69,20 @@ const getTimerFuc = (item:any) => {
   return resTimer
 }
 
+// 选中好友
 const selectChatObj = (item:any,index:any) => {
   state.currentIndex = index
   emit('selectChatFuc',item)
+}
+
+// 好友申请
+const friendRequestsFuc = () => {
+  state.friendsVisible = true
+}
+
+// 添加好友弹窗关闭
+const closeModal = () => {
+  state.friendsVisible = false
 }
 
 
@@ -70,6 +95,12 @@ const selectChatObj = (item:any,index:any) => {
       // height:48px;
       background:#fff;
       padding:15px;
+      display:flex;
+      .ant-btn{
+        margin-left: 5px;
+        flex:none;
+        color:#999;
+      }
     }
     .side-left-item{
       display:flex;

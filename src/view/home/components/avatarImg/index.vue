@@ -4,7 +4,7 @@
     :preview="false"
     :width="prop.avatarWh"
     :height="prop.avatarWh"
-    :src="prop.avatar"
+    :src="'http://114.132.249.192/a/100?url=' + prop.avatar"
   />
   <div v-else class="not-avatar" :style="{width: prop.avatarWh +'px' , height: prop.avatarWh +'px',lineHeight:prop.avatarWh +'px'}">
     {{prop.name.slice(0,2)}}

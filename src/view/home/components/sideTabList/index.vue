@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import { TeamOutlined,CommentOutlined } from '@ant-design/icons-vue';
 import { reactive } from 'vue';
+const emits = defineEmits(['selectSideTabFuc'])
 const state = reactive({
   sideTabList:[
     {
@@ -26,6 +27,7 @@ const state = reactive({
 
 const selectSideTab = (item:any) => {
   state.curIndex = item.id
+  emits('selectSideTabFuc',item)
 }
 
 </script>
