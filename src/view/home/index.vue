@@ -63,6 +63,7 @@ import {
 
 const ws = new WebSocket('ws://114.132.249.192:8081/echo?token=' + localStorage.getItem('token'))
 const store = computed(() => useStore().userInfo)
+console.log(store)
 const state= reactive({
   chatTitle:'', // 当前用户姓名
   chatAvatar:'', // 当前用户头像
@@ -88,20 +89,29 @@ let sendChatMsgRef = ref()
 const sendChatMsgFuc = async (val:any) => {
   let innerText = val
   let uuid = guid()
-    let sendMsg = {
-                  "randomId": uuid.toString(),
-                  "type": "chat",
-                  "id":state.toId,
-                  "toId":state.toId, 
-                  "sessionType": state.sessionType,
-                  "fromUname":store.value.uname,
-                  "chatMessage": {
-                    "content": innerText,
-                    "sendTime":timerFormat(new Date()),
-                    "leftOrRight":'2',
-                    "contentType": 1
+  let sendMsg = 
+                  // "randomId": uuid.toString(),
+                  // "type": "chat",
+                  // "id":state.toId,
+                  // "toId":state.toId, 
+                  // "sessionType": state.sessionType,
+                  // "fromUname":store.value.uname,
+                  // "chatMessage": {
+                  //   "content": innerText,
+                  //   "sendTime":timerFormat(new Date()),
+                  //   "leftOrRight":'2',
+                  //   "contentType": 1
+                  // }
+                  {
+                    "randomId": uuid.toString(),
+                    "toId": state.toId,
+                    "sessionType": state.sessionType,
+                    "chatMessage": {
+                      "content": innerText,
+                      "contentType": 1
+                    }
                   }
-                }
+                
     let addMsg = {
       data:sendMsg
     } 
@@ -111,31 +121,30 @@ const sendChatMsgFuc = async (val:any) => {
     })
   if(ws){
     ws.onopen = () => {}
-     ws.send(JSON.stringify(sendMsg))
-    console.log(ws)
+      ws.send('100101' + JSON.stringify(sendMsg))
     }
 }
 // 增加消息数据
 const addMsgData = (dataRes:any,type:number) => {
   // dataRes 元数据 type 1为发送消息 2为接收消息方
-  console.log(dataRes.data,'dataRes.data.')
   if(type == 1){
     let chatDataAll = window.localStorage.getItem('chatDataAll')
+    dataRes.data.chatMessage.leftOrRight = '2'
     if(!chatDataAll){
-      let chatData = []
+      let chatData = <any>{}
+      chatData[state.toId] = {}
       dataRes.data.chatMessageList = []
       dataRes.data.chatMessageList.push(dataRes.data.chatMessage)
-      chatData.push(dataRes.data)
+      chatData[state.toId] = dataRes.data
       window.localStorage.setItem('chatDataAll',JSON.stringify(chatData))
     }else{
       let chatData = JSON.parse(chatDataAll)
-      let chatDataIndex = chatData.findIndex((o:any) => o.id == dataRes.data.id)
-      if(!chatData[chatDataIndex]){
+      if(!chatData[state.toId]){
         dataRes.data.chatMessageList = []
         dataRes.data.chatMessageList.push(dataRes.data.chatMessage)
-        chatData.push(dataRes.data)
+        chatData[state.toId] = dataRes.data
       }else{
-        chatData[chatDataIndex].chatMessageList.push(dataRes.data.chatMessage)
+        chatData[state.toId].chatMessageList.push(dataRes.data.chatMessage)
       }
       window.localStorage.setItem('chatDataAll',JSON.stringify(chatData))
     }
@@ -156,20 +165,19 @@ const addMsgData = (dataRes:any,type:number) => {
     }
     dataRes.data.chatMessage.leftOrRight = '1'
     if(!chatDataAll){
-      let chatData = []
+      let chatData = <any>{}
       dataRes.data.chatMessageList = []
       dataRes.data.chatMessageList.push(dataRes.data.chatMessage)
-      chatData.push(dataRes.data)
+      chatData[dataRes.data.fromId] = dataRes.data
       window.localStorage.setItem('chatDataAll',JSON.stringify(chatData))
     }else{
       let chatData = JSON.parse(chatDataAll)
-      let chatDataIndex = chatData.findIndex((o:any) => o.id == dataRes.data.id)
-      if(!chatData[chatDataIndex]){
+      if(!chatData[dataRes.data.fromId]){
         dataRes.data.chatMessageList = []
         dataRes.data.chatMessageList.push(dataRes.data.chatMessage)
-        chatData.push(dataRes.data)
+        chatData[dataRes.data.fromId] = dataRes.data
       }else{
-        chatData[chatDataIndex].chatMessageList.push(dataRes.data.chatMessage)
+         chatData[dataRes.data.fromId].chatMessageList.push(dataRes.data.chatMessage)
       }
       window.localStorage.setItem('chatDataAll',JSON.stringify(chatData))
     }
@@ -184,10 +192,10 @@ const updateUserData = () => {
     return
   }
   state.chatUserList.forEach((o:any) => {
-    let readIndex = resListData.findIndex((o1:any) => o1.id == o.id)
-    if(readIndex!= -1){
-      let count = resListData[readIndex].chatMessageList.filter((o2:any) =>o2.isRead == "0" ).length
-      let resArr = resListData[readIndex].chatMessageList
+    let readIndex = resListData[o.id]
+    if(readIndex){
+      let count = resListData[o.id].chatMessageList.filter((o2:any) =>o2.isRead == "0" ).length
+      let resArr = resListData[o.id].chatMessageList
         o.readCunt = count
         o.contantFirst = resArr[resArr.length - 1]
     }
@@ -197,9 +205,8 @@ const updateUserData = () => {
 // 获取聊天记录
 const getChatUserList = () => {
   let resListData = JSON.parse(window.localStorage.getItem('chatDataAll') as string)
-  let resIndex =  resListData.findIndex((o:any) => o.id == state.toId)
-  if(resIndex != -1){
-    state.chatList = resListData[resIndex].chatMessageList
+  if(resListData[state.toId]){
+    state.chatList = resListData[state.toId].chatMessageList
     nextTick(()=>{
       chatMainContent.value.scrollTop = chatRecordList.value.clientHeight
     })
@@ -255,14 +262,19 @@ const selectChatFuc = (item:any) => {
     if(!resListData){
       return
     }
-    resListData.forEach((o:any)=>{
-      if(o.id == state.toId){
-        o.chatMessageList.forEach((o2:any)=>{
+    // resListData.forEach((o:any)=>{
+    //   if(o.id == state.toId){
+    //     o.chatMessageList.forEach((o2:any)=>{
+    //       o2.isRead = '1'
+    //     })
+    //     // console.log( o.chatMessageList)
+    //   }
+    // })
+    if(resListData[state.toId]){
+     resListData[state.toId].chatMessageList.forEach((o2:any)=>{
           o2.isRead = '1'
         })
-        // console.log( o.chatMessageList)
-      }
-    })
+    }
     window.localStorage.setItem('chatDataAll',JSON.stringify(resListData))
   }
   getChatUserList()
@@ -296,11 +308,32 @@ onMounted(()=>{
   }
   ws.onmessage = (e) => {
     // 在这里写处理函数
-    let dataRes = JSON.parse(e.data)
-        console.log('返回的数据',dataRes);
-        if(dataRes.data && dataRes.data.chatMessage){
-          addMsgData(dataRes,2)
+    let statusIndex = e.data.indexOf('{')
+    let statusCode = e.data.slice(0,statusIndex)
+    let statusMsg = e.data.slice(statusIndex,e.data.length)
+    let isReceive = e.data.indexOf('body')// 是否接收消息
+    // console.log(e.data,statusIndex,statusCode,statusMsg)
+    // 入库成功
+    if(statusCode == 777777){
+      console.log(JSON.parse(statusMsg),'处理失败')
+    }
+    // 接受消息
+    if(statusCode == 666666 && isReceive > -1){
+      let data = JSON.parse(statusMsg)
+      console.log(JSON.parse(statusMsg),666666)
+      if(data.data.message = 'ok'){
+        let dataRes = <any>{
+          data: data.data.body
         }
+        addMsgData(dataRes,2)
+      }
+    }
+    // let dataRes = JSON.parse()
+    //     console.log('返回的数据',e);
+    //     // console.log('返回的数据',dataRes);
+    //     if(dataRes.data && dataRes.data.chatMessage){
+    //       addMsgData(dataRes,2)
+    //     }
     };
   }
 })

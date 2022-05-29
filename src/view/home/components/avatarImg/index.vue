@@ -26,6 +26,7 @@ let prop = defineProps({
     default:36
   }
 })
+// console.log(prop.avatar,'prop.avatar')
 </script>
 
 <style lang="scss" scoped> 

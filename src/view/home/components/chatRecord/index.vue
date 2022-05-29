@@ -58,7 +58,7 @@ const prop = defineProps({
   },
   avatarObj:{
     type:Object,
-    default:''
+    default:{}
   }
 })
 const senTimerFuc = (item:any) => {

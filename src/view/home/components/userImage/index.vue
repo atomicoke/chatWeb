@@ -1,11 +1,12 @@
 <template>
   <div class="image-box">
     <a-dropdown :trigger="['click']" v-model:visible="state.visibleFalse">
-      <a-image  @click.prevent
+      <!-- <a-image  @click.prevent
                 :preview="false"
                 :width="42"
-                :src="state.userInfo.avatar"
-              />
+                :src="'http://114.132.249.192/a/100?url=' + state.userInfo.avatar"
+              /> -->
+      <AvatarImage :avatar="state.userInfo.avatar" :name="state.userInfo.uname" @click.prevent/>
     <template #overlay>
       <div class="user-info">
         <div class="user-info-item">
@@ -16,12 +17,13 @@
             <h3><span>ID:</span><em>{{state.userInfo.idLong}}</em></h3>
             </div>
           <div class="user-info-item-right" title="点击修改">
-            <a-image
+            <!-- <a-image
                   :preview="false"
                   :width="42"
-                  :src="state.userInfo.avatar"
+                  :src="'http://114.132.249.192/a/100?url=' + state.userInfo.avatar"
                   @click="updateAvatarFuc"
-                />
+                /> -->
+            <AvatarImage @click="updateAvatarFuc" :avatar="state.userInfo.avatar" :name="state.userInfo.uname" @click.prevent/>
           </div>
         </div>
       </div>  
@@ -36,6 +38,7 @@ import { reactive, ref ,nextTick} from 'vue';
 import avatar from '@/assets/avatar.png'
 import {useStore} from '@/store/index'
 import UpdateAvatar from '@/view/home/components/updateAvatar/index.vue'
+import AvatarImage from '@/view/home/components/avatarImg/index.vue'
 
 import {
   editSelfInfo, // 修改用户信息
@@ -48,7 +51,7 @@ const state = reactive({
   userInfo:{
     uname:store.uname,
     idLong:store.idLong,
-    avatar:store.avatar ? store.avatar : avatar
+    avatar:store.avatar
   },
   visibleUpdate:false,
   editFalse:false,
